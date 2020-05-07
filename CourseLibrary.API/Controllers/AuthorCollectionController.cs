@@ -18,13 +18,18 @@ namespace CourseLibrary.API.Controllers
         private readonly IMapper _mapper;
         private readonly ICourseLibraryRepository _courseLibraryRepository;
 
+
         public AuthorCollectionController(IMapper mapper, ICourseLibraryRepository courseLibraryRepository)
         {
             this._mapper = mapper;
             this._courseLibraryRepository = courseLibraryRepository;
         }
 
+
+
+
         [HttpGet("({ids})",Name = "GetAuthorsCollection")]
+
 
         public IActionResult GetAuthorsCollection(
             [FromRoute][ModelBinder(BinderType =typeof(ArrayModelBinder))] IEnumerable<Guid> ids)
@@ -44,6 +49,8 @@ namespace CourseLibrary.API.Controllers
 
             return Ok(authorToReturn);
         }
+
+
 
         // Collec
         [HttpPost]
