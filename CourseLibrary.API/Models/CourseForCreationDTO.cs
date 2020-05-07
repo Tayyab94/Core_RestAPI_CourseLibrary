@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 namespace CourseLibrary.API.Models
 {
 
-    [CourseTitleMustBeDifferentFromDescriptionAttributs]
+    [CourseTitleMustBeDifferentFromDescriptionAttributs(ErrorMessage ="Title of Description Must be Different..")]
 
                                         // Is applied to Impleent The Custom validation on the Entity Model
     public class CourseForCreationDTO // :IValidatableObject
     {
     
-        [Required]
-        [MaxLength(100)]
+        [Required(ErrorMessage ="The Title of the Course is REquired...")]
+        [MaxLength(10,ErrorMessage ="Title Length must be 10 characotors....")]
         public string Title { get; set; }
 
         [Required]

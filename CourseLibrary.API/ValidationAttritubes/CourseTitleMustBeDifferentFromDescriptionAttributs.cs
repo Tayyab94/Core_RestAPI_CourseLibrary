@@ -19,7 +19,7 @@ namespace CourseLibrary.API.ValidationAttritubes
             if (Course.Title.ToLower().Equals(Course.Description.ToLower()))
             {
                 return new ValidationResult(
-                    "The provided Description Must be different from title",
+                    ErrorMessage,
                     new[] { nameof(CourseForCreationDTO) }
                     );
 
