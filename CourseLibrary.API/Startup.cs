@@ -35,7 +35,29 @@ namespace CourseLibrary.API
                 setApplication.ReturnHttpNotAcceptable = true;
 
 
-            }).AddXmlDataContractSerializerFormatters();
+            }).AddXmlDataContractSerializerFormatters()
+            .ConfigureApiBehaviorOptions(setUp =>
+            {
+                setUp.InvalidModelStateResponseFactory = context =>
+                {
+                    var probelDetail = new ValidationProblemDetails(context.ModelState)
+                    {
+                        Type = "https:://Courselibrary.com/ModelValidationProblem",
+                        Detail = "See the Error Property Fro More Detial",
+                        Title = "one Or More Validation Error Orrur",
+                        Status = StatusCodes.Status422UnprocessableEntity,
+                        Instance = context.HttpContext.Request.Path
+                    };
+
+                    probelDetail.Extensions.Add("traceID", context.HttpContext.TraceIdentifier);
+
+                    return new UnprocessableEntityObjectResult(probelDetail)
+                    {
+                        ContentTypes = { "APPLICATION/PROBLEM+JSON" }
+                        };
+                };
+
+            });
 
             //  AuthoMapper Dependencies are declare here.. 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

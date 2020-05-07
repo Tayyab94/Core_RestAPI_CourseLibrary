@@ -15,7 +15,7 @@ namespace CourseLibrary.API.Models
     {
     
         [Required(ErrorMessage ="The Title of the Course is REquired...")]
-        [MaxLength(10,ErrorMessage ="Title Length must be 10 characotors....")]
+        [MaxLength(140,ErrorMessage ="Title Length must be 10 characotors....")]
         public string Title { get; set; }
 
         [Required]
