@@ -14,13 +14,13 @@ namespace CourseLibrary.API.ValidationAttritubes
 
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var Course = (CourseForCreationDTO)validationContext.ObjectInstance;
+            var Course = (CourseForManipulationDTO)validationContext.ObjectInstance;
 
             if (Course.Title.ToLower().Equals(Course.Description.ToLower()))
             {
                 return new ValidationResult(
                     ErrorMessage,
-                    new[] { nameof(CourseForCreationDTO) }
+                    new[] { nameof(CourseForManipulationDTO) }
                     );
 
             }

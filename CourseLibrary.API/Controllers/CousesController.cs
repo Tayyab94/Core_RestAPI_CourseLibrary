@@ -12,22 +12,22 @@ namespace CourseLibrary.API.Controllers
 {
     [ApiController]
     [Route("api/authors/{authorId}/courses")]
-    public class CousesController :ControllerBase
+    public class CousesController : ControllerBase
     {
         private readonly ICourseLibraryRepository courseLibraryRepository;
         private readonly IMapper _mapper;
 
-        public CousesController(ICourseLibraryRepository courseLibraryRepository,IMapper mapper)
+        public CousesController(ICourseLibraryRepository courseLibraryRepository, IMapper mapper)
         {
             this.courseLibraryRepository = courseLibraryRepository;
             this._mapper = mapper;
         }
 
 
-        [HttpGet("{list}")]
-        public ActionResult<IEnumerable<CourseDTO>>GetCoursesForAuthors(Guid createrId)
+        [HttpGet("list")]
+        public ActionResult<IEnumerable<CourseDTO>> GetCoursesForAuthors(Guid createrId)
         {
-            if(!courseLibraryRepository.AuthorExists(createrId))
+            if (!courseLibraryRepository.AuthorExists(createrId))
             {
                 return NotFound();
             }
@@ -40,9 +40,9 @@ namespace CourseLibrary.API.Controllers
         }
 
 
-      [HttpGet(Name = "GetCourseForAuthor")]
-      [Route("{courseId}")]
-      public ActionResult<CourseDTO>GetCourseForAuthor(Guid authorId, Guid courseId)
+        [HttpGet(Name = "GetCourseForAuthor")]
+        [Route("{courseId}")]
+        public ActionResult<CourseDTO> GetCourseForAuthor(Guid authorId, Guid courseId)
         {
 
             if (!courseLibraryRepository.AuthorExists(authorId))
@@ -52,13 +52,13 @@ namespace CourseLibrary.API.Controllers
 
             return Ok(_mapper.Map<CourseDTO>(courseForAuthorRepo));
         }
-    
-    
-    
+
+
+
         [HttpPost]
-        public ActionResult<CourseDTO>CreateCourse(Guid authorId,CourseForCreationDTO courseForCreationDTO)
+        public ActionResult<CourseDTO> CreateCourse(Guid authorId, CourseForCreationDTO courseForCreationDTO)
         {
-            if(!courseLibraryRepository.AuthorExists(authorId))
+            if (!courseLibraryRepository.AuthorExists(authorId))
             {
                 return BadRequest();
             }
@@ -71,8 +71,40 @@ namespace CourseLibrary.API.Controllers
 
             var courseToReturn = _mapper.Map<CourseDTO>(courseEntiy);
 
-            return CreatedAtRoute("GetCourseForAuthor", new { authorId = authorId, courseId = courseToReturn.Id },(courseToReturn));
+            return CreatedAtRoute("GetCourseForAuthor", new { authorId = authorId, courseId = courseToReturn.Id }, (courseToReturn));
 
+        }
+
+        [HttpPut("{courseId}")]
+
+        public ActionResult UpdateCourseForAuthor(Guid courseId, Guid authorId, CourseForUpdateDTO courseForUpdateDTO)
+        {
+            if(!courseLibraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+
+
+            var courseReturnFromRepo = courseLibraryRepository.GetCourse(authorId, courseId);
+
+            if(courseReturnFromRepo==null)
+            {
+                return NotFound();
+            }
+
+
+            // Map the Entity to the CourseForUpdate 
+            // Apply the Update Field Value to the DTo
+            // Map the CourseForUpdate Back to the Entity 
+
+            _mapper.Map(courseForUpdateDTO, courseReturnFromRepo);
+
+
+            courseLibraryRepository.UpdateCourse(courseReturnFromRepo);
+
+            courseLibraryRepository.Save();
+
+            return NoContent();
         }
     
     }

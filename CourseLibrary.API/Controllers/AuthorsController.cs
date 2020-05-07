@@ -101,7 +101,6 @@ namespace CourseLibrary.API.Controllers
 
             var authorToRetrun = _mapper.Map<AuthorDTO>(authorEntity);
 
-
                             // RouteName will be that, which is defined in [HttpPost, Name="..Name.."]   
             return CreatedAtRoute("GetAuthor", new { authorId = authorToRetrun.Id }, authorToRetrun);
 
