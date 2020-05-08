@@ -118,6 +118,32 @@ namespace CourseLibrary.API.Controllers
             return NoContent();
         }
 
+
+        [HttpDelete("{courseId}")]
+
+        public ActionResult DeleteCourseForAuthor(Guid courseId, Guid authorId)
+        {
+            if(!courseLibraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+
+            var courseReturn = courseLibraryRepository.GetCourse(authorId, courseId);
+
+            if(courseReturn==null)
+            {
+                return NotFound();
+            }
+
+            courseLibraryRepository.DeleteCourse(courseReturn);
+
+            courseLibraryRepository.Save();
+
+            return NoContent();
+
+        }
+
+
         [HttpPatch("{courseId}")]
 
         public ActionResult PartiallyUpdateCourseForAuthor(Guid courseId, Guid authorId,JsonPatchDocument<CourseForUpdateDTO> patchDocument)
