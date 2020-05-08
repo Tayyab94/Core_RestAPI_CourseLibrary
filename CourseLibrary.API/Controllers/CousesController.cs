@@ -142,8 +142,6 @@ namespace CourseLibrary.API.Controllers
             return NoContent();
 
         }
-
-
         [HttpPatch("{courseId}")]
 
         public ActionResult PartiallyUpdateCourseForAuthor(Guid courseId, Guid authorId,JsonPatchDocument<CourseForUpdateDTO> patchDocument)
