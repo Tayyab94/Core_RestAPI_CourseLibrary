@@ -2,6 +2,7 @@
 using CourseLibrary.API.Entities;
 using CourseLibrary.API.Models;
 using CourseLibrary.API.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -79,11 +80,11 @@ namespace CourseLibrary.API.Controllers
 
         public ActionResult UpdateCourseForAuthor(Guid courseId, Guid authorId, CourseForUpdateDTO courseForUpdateDTO)
         {
+
             if(!courseLibraryRepository.AuthorExists(authorId))
             {
                 return NotFound();
             }
-
 
             var courseReturnFromRepo = courseLibraryRepository.GetCourse(authorId, courseId);
 
@@ -93,13 +94,11 @@ namespace CourseLibrary.API.Controllers
 
                 courseLibraryRepository.AddCourse(authorId, CourseToAdd);
                 courseLibraryRepository.Save();
-
                 var courseToReturn = _mapper.Map<CourseDTO>(CourseToAdd);
 
                 return CreatedAtRoute("GetCourseForAuthor",
                     new { authorId = authorId, courseId = courseToReturn.Id }, courseToReturn);
             }
-
 
             // Map the Entity to the CourseForUpdate 
             // Apply the Update Field Value to the DTo
@@ -107,8 +106,43 @@ namespace CourseLibrary.API.Controllers
 
             _mapper.Map(courseForUpdateDTO, courseReturnFromRepo);
 
-
             courseLibraryRepository.UpdateCourse(courseReturnFromRepo);
+
+            courseLibraryRepository.Save();
+
+            return NoContent();
+        }
+
+        [HttpPatch("{courseId}")]
+
+        public ActionResult PartiallyUpdateCourseForAuthor(Guid courseId, Guid authorId,JsonPatchDocument<CourseForUpdateDTO> patchDocument)
+        { 
+
+            if(!courseLibraryRepository.AuthorExists(authorId))
+            {
+                return NotFound();
+            }
+
+            var courseForAuthorFromRepo = courseLibraryRepository.GetCourse(authorId, courseId);
+
+            if(courseForAuthorFromRepo==null)
+            {
+                return NotFound();
+            }
+
+
+
+
+            var courseToPatch = _mapper.Map<CourseForUpdateDTO>(courseForAuthorFromRepo);
+
+            // add Validation
+
+            patchDocument.ApplyTo(courseToPatch);
+
+
+            _mapper.Map(courseToPatch, courseForAuthorFromRepo);
+
+            courseLibraryRepository.UpdateCourse(courseForAuthorFromRepo);
 
             courseLibraryRepository.Save();
 

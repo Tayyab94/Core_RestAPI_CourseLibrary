@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 
 namespace CourseLibrary.API
 {
@@ -36,6 +37,10 @@ namespace CourseLibrary.API
 
 
             }).AddXmlDataContractSerializerFormatters()
+            .AddNewtonsoftJson(setap => {
+                setap.SerializerSettings.ContractResolver =
+                new CamelCasePropertyNamesContractResolver();
+            })
             .ConfigureApiBehaviorOptions(setUp =>
             {
                 setUp.InvalidModelStateResponseFactory = context =>
