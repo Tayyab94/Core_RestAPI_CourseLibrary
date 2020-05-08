@@ -132,7 +132,22 @@ namespace CourseLibrary.API.Controllers
 
             if(courseForAuthorFromRepo==null)
             {
-                return NotFound();
+                var courseDto = new CourseForUpdateDTO();
+
+                patchDocument.ApplyTo(courseDto);
+
+                var courseToAddd = _mapper.Map<Course>(courseDto);
+
+                courseToAddd.Id = courseId;
+
+                courseLibraryRepository.AddCourse(authorId, courseToAddd);
+
+                courseLibraryRepository.Save();
+
+                var courseToReturn = _mapper.Map<CourseDTO>(courseToAddd);
+
+                return
+                    CreatedAtRoute("GetCourseForAuthor", new { authorId = authorId, courseId = courseToReturn.Id }, courseToReturn);
             }
 
 
