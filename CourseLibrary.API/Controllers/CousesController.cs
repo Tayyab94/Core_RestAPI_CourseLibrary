@@ -179,7 +179,10 @@ namespace CourseLibrary.API.Controllers
                 var courseToReturn = _mapper.Map<CourseDTO>(courseToAddd);
 
                 return
-                    CreatedAtRoute("GetCourseForAuthor", new { authorId = authorId, courseId = courseToReturn.Id }, courseToReturn);
+                    CreatedAtRoute(
+                        "GetCourseForAuthor", 
+                    new { authorId = authorId, courseId = courseToReturn.Id },
+                    courseToReturn);
             }
 
 

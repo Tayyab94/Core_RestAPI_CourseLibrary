@@ -105,5 +105,21 @@ namespace CourseLibrary.API.Controllers
             return CreatedAtRoute("GetAuthor", new { authorId = authorToRetrun.Id }, authorToRetrun);
 
         }
+
+        [HttpDelete("{authoId}")]
+
+        public ActionResult DeleteAuthor(Guid authorId)
+        {
+            var authorReturn = _courseLibraryRepository.GetAuthor(authorId);
+
+            if (authorReturn == null) return NotFound();
+
+            _courseLibraryRepository.DeleteAuthor(authorReturn);
+
+            _courseLibraryRepository.Save();
+
+
+            return NoContent();
+        }
     }
 }
