@@ -140,10 +140,10 @@ namespace CourseLibrary.API.Services
             if (authorResourceParameters == null)
                 throw new ArgumentNullException(nameof(authorResourceParameters));
 
-            if (string.IsNullOrEmpty(authorResourceParameters.mainCategory) && string.IsNullOrEmpty(authorResourceParameters.searchQuery))
-            {
-                return GetAuthors();
-            }
+            //if (string.IsNullOrEmpty(authorResourceParameters.mainCategory) && string.IsNullOrEmpty(authorResourceParameters.searchQuery))
+            //{
+            //    return GetAuthors();
+            //}
             var collection=context.Authors as IQueryable<Author>;
 
             if(!string.IsNullOrEmpty(authorResourceParameters.mainCategory))
@@ -162,7 +162,10 @@ namespace CourseLibrary.API.Services
                 
             }
 
-            return collection.ToList();
+            return collection
+                .Skip(authorResourceParameters.PageSize * (authorResourceParameters.pageNo-1))
+                .Take(authorResourceParameters.PageSize)
+                .ToList();
 //            return context.Authors.Where(s => s.MainCategory == mainCategory).ToList();
 
         }
