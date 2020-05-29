@@ -1,6 +1,8 @@
 ﻿using CourseLibrary.API.Context;
 using CourseLibrary.API.Entities;
+using CourseLibrary.API.Helpers;
 using CourseLibrary.API.ResourceParameters;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -134,7 +136,7 @@ namespace CourseLibrary.API.Services
 
         // Get Authors By Searching Parametes
 
-        public IEnumerable<Author>GetAuthors(AuthorResourceParameters authorResourceParameters)
+        public PagedList<Author>GetAuthors(AuthorResourceParameters authorResourceParameters)
         {
 
             if (authorResourceParameters == null)
@@ -162,10 +164,15 @@ namespace CourseLibrary.API.Services
                 
             }
 
-            return collection
-                .Skip(authorResourceParameters.PageSize * (authorResourceParameters.pageNo-1))
-                .Take(authorResourceParameters.PageSize)
-                .ToList();
+            //return collection
+            //    .Skip(authorResourceParameters.PageSize * (authorResourceParameters.pageNo-1))
+            //    .Take(authorResourceParameters.PageSize)
+            //    .ToList();
+
+            return PagedList<Author>.
+                Create(collection, authorResourceParameters.pageNo, authorResourceParameters.PageSize);
+
+
 //            return context.Authors.Where(s => s.MainCategory == mainCategory).ToList();
 
         }
